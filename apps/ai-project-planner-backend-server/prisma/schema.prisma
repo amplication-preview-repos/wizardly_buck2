@@ -1,0 +1,42 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Project {
+  createdAt              DateTime                @default(now())
+  description            String?
+  functionalRequirements FunctionalRequirement[]
+  id                     String                  @id @default(cuid())
+  libraryFrameworks      LibraryFramework[]
+  name                   String?
+  tools                  String?
+  typeField              EnumProjectTypeField?
+  updatedAt              DateTime                @updatedAt
+}
+
+model FunctionalRequirement {
+  createdAt   DateTime @default(now())
+  description String?
+  id          String   @id @default(cuid())
+  project     Project? @relation(fields: [projectId], references: [id])
+  projectId   String?
+  updatedAt   DateTime @updatedAt
+}
+
+model LibraryFramework {
+  createdAt DateTime @default(now())
+  id        String   @id @default(cuid())
+  name      String?
+  project   Project? @relation(fields: [projectId], references: [id])
+  projectId String?
+  updatedAt DateTime @updatedAt
+}
+
+enum EnumProjectTypeField {
+  Option1
+}
